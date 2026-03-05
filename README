@@ -1,0 +1,128 @@
+ECOMMERCE SALE ANALYSIS - DISCOUNT EFFECTIVENESS
+
+1. TỔNG QUAN 
+
+Dự án này phân tích dữ liệu giao dịch thương mại điện tử để đánh giá hiệu quả của việc giảm giá và tác động của chúng đến:
+- Doanh thu
+- Giá trị trung bình của đơn hàng (AOV)
+- Hành vi mua sắm của khách hàng
+Mục tiêu xác định xem việc giảm giá có làm tăng doanh thu và giá trị trung bình của đơn hàng hay không
+
+2. VẤN ĐỀ
+
+Giảm giá có thực sự làm tăng doanh thu và chi tiêu của khách hàng không?
+Câu hỏi chính:
+- Các đơn hàng được giảm giá có tạo ra doanh thu cao hơn?
+- Giảm giá có làm tăng giá trị trung bình của các đơn hàng(AOV) không?
+- Phân khúc khách hàng nào phản ánh tích cực với chương trình giảm giá?
+- Thành phố nào phụ thuộc nhiều vào các chương trình giảm giá?
+
+3. MÔ TẢ DỮ LIỆU 
+
+Dự liệu gồm các cột như sau:
+- CID: customer ID 
+- TID: Transaction ID 
+- Gender: giới tính (male, female)
+- Age_Group: nhóm tuổi
+- Purchase_Data: thời gian mua hàng
+- Product_Category: loại sản phẩm được mua
+- Discount_Availed (Yes/No): Cho biết khách hàng có được hưởng bất kỳ khoản giảm giá nào hay không
+- Discount_Name: tên của chương trình giảm giá
+- Discount_Amount(INR): số tiền giảm giá mà khách hàng được hưởng
+- Gross_Amount: tổng số tiền trước khi trước khi áp dụng giảm giá
+- Net_Amount: tổng số tiền sau khi áp dụng giảm giá
+- Purchase_Method: phương thức thanh toán
+- Location: thành phố nơi diễn ra giao dịch
+
+4. QUY TRÌNH LÀM SẠCH DỮ LIỆU 
+
+- Kiểm tra Null ở các cột 
+- Kiểm tra logic giảm giá:
+    Nếu Discount_Availed ="No" nhưng Discount_Amount > 0
+    Nêu Discount_Availed = 'No' nhưng có Discount_Name
+- kiểm tra Net_Amount validation
+    ABS(Net_Amount - (Gross_Amount - Discount_Amount)) >0.01
+    sai số không quá 0.01
+- Xóa bỏ các giao dịch trùng lặp
+- Chuyển đổi định dạng ngày giờ chính xác 
+#-->Vì sao phải kiểm tra Null?
+#CID NULL
+- Không biết khách hàng nào mua
+- Không phân tích được hành vi khách hàng
+#TID NULL
+- Không xác định được transaction
+- Có thể là lỗi hệ thống
+#Net_Amount NULL
+- Không tính được doanh thu 
+            Revenue = SUM(Net_Amount)
+#-->Vì sao phải kiêm tra logic?
+Vì dữ liệu có thể bị:
+- Discount_Availed = 'No' nhưng Discount_Amount > 0
+- Hoặc ngược lại
+Nếu không kiểm tra -> phân tích sai hiệu quả discount.
+#--> Xóa các giao dịch trùng lặp
+- Tránh nhân đôi doanh thu -> gây lỗi trong phân tích
+#chuyển Purchase_Date sang datetime
+Nếu để dạng string:
+- Không group theo năm/tháng
+- Tính tăng trưởng theo thời gian
+- Phân tích xu hướng
+
+
+5. CÁC CHỈ SỐ CHÍNH ĐƯỢC SỬ DỤNG
+TỔNG SỐ ĐƠN HÀNG (TOTAL ORDER) = COUNT(TID)
+TỔNG DOANNH THU (TOTAL REVENUE) = SUM(Net_Amount)
+GIÁ TRỊ ĐƠN TRUNG BÌNH (AVERAGE ORDER VALUE) = TOTAL_REVENUE/ TOTAL_ORDER
+TỈ LỆ SỬ DỤNG GIẢM GIÁ = (OrderswithDiscount/Total_Order)x100
+
+6. KHÁM PHÁ DỮ LIỆU (file )
+Phân tích được thực hiện để hiểu rõ hơn về hành vi mua sắm:
+
+- Xu hướng số lượng đơn hàng theo tháng
+- Xu hướng doanh thu theo thời gian
+- So sánh AOV giữa đơn hàng có giảm giá và không giảm giá
+- Phân tích đơn hàng theo nhóm tuổi
+- Top 5 thành phố sử dụng giảm giá nhiều nhất
+- Mức độ phụ thuộc vào giảm giá theo danh mục sản phẩm
+- Ảnh hưởng của giảm giá theo nhóm tuổi
+
+7. NHỮNG PHÁT HIỆN CHÍNH
+- Số đơn hàng áp dụng giảm giá cao hơn so với các đơn hàng không được áp dụng vào dịp cuối năm và trong dịp hè (số đơn hàng không tăng mạnh khi có giảm giá)
+- Giá trị mỗi đơn hàng (AOV) thấp hơn khi có discount
+    Discount: 2.74K
+    Non-discount: 3.01k
+-> Discount làm giảm giá trị trung bình của đơn hàng 
+- Lợi nhuận từ các đơn hàng không được giảm giá cao hơn
+-> Discount chưa tạo ra doanh thu cao hơn
+- Top 5 thành phố đều có tỷ lệ sử dụng discount trên 50%
+-> Các chương trình khuyến mãi được áp dụng khá phổ biến.
+- Số lượng đơn hàng có giảm giá và không giảm giá trong các danh mục sản phẩm không chênh lệch quá lớn.
+->Điều này cho thấy giảm giá không phải là yếu tố chính thúc đẩy mua hàng ở mọi danh mục sản phẩm.
+- Tỷ lệ sử dụng giảm giá khá đồng đều giữa các nhóm tuổi, cho thấy chương trình giảm giá ảnh hưởng đến nhiều phân khúc khách hàng.
+8. ĐỀ XUẤT
+- Dựa trên kết quả phân tích, có thể đưa ra một số đề xuất:
+- Giảm việc áp dụng giảm giá đại trà, vì giảm giá không làm tăng giá trị đơn hàng trung bình.
+- Áp dụng giảm giá có chọn lọc cho các danh mục sản phẩm cần kích cầu.
+- Tập trung phát triển các chương trình khách hàng thân thiết thay vì phụ thuộc quá nhiều vào giảm giá.
+- Tối ưu các chiến dịch giảm giá theo mùa vụ hoặc thời điểm mua sắm cao điểm.
+9. CÔNG CỤ SỬ DỤNG 
+- Excel
+- SQL
+- Power BI
+10. CẤU TRÚC DỰ ÁN 
+Ecommerce-Discount-Analysis
+│
+├── data
+│   └── ecommerce_dataset.csv
+│
+├── sql
+│   └── data_cleaning.sql
+│
+├── dashboard
+│   └── ecommerce_discount_analysis.pbix
+│
+├── images
+│   └── dashboard_preview.png
+│
+└── README.md
+
