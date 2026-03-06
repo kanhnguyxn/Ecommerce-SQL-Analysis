@@ -87,6 +87,7 @@ Phân tích được thực hiện để hiểu rõ hơn về hành vi mua sắm
 - Ảnh hưởng của giảm giá theo nhóm tuổi
 
 7. NHỮNG PHÁT HIỆN CHÍNH
+
 - Số đơn hàng áp dụng giảm giá cao hơn so với các đơn hàng không được áp dụng vào dịp cuối năm và trong dịp hè (số đơn hàng không tăng mạnh khi có giảm giá)
 - Giá trị mỗi đơn hàng (AOV) thấp hơn khi có discount
     Discount: 2.74K
@@ -99,17 +100,23 @@ Phân tích được thực hiện để hiểu rõ hơn về hành vi mua sắm
 - Số lượng đơn hàng có giảm giá và không giảm giá trong các danh mục sản phẩm không chênh lệch quá lớn.
 ->Điều này cho thấy giảm giá không phải là yếu tố chính thúc đẩy mua hàng ở mọi danh mục sản phẩm.
 - Tỷ lệ sử dụng giảm giá khá đồng đều giữa các nhóm tuổi, cho thấy chương trình giảm giá ảnh hưởng đến nhiều phân khúc khách hàng.
+
 8. ĐỀ XUẤT
+
 - Dựa trên kết quả phân tích, có thể đưa ra một số đề xuất:
 - Giảm việc áp dụng giảm giá đại trà, vì giảm giá không làm tăng giá trị đơn hàng trung bình.
 - Áp dụng giảm giá có chọn lọc cho các danh mục sản phẩm cần kích cầu.
 - Tập trung phát triển các chương trình khách hàng thân thiết thay vì phụ thuộc quá nhiều vào giảm giá.
 - Tối ưu các chiến dịch giảm giá theo mùa vụ hoặc thời điểm mua sắm cao điểm.
+
 9. CÔNG CỤ SỬ DỤNG 
+
 - Excel
 - SQL
 - Power BI
+
 10. CẤU TRÚC DỰ ÁN 
+
 Ecommerce-Discount-Analysis
 │
 ├── data
